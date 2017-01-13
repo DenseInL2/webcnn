@@ -36,6 +36,11 @@ let backwardTime = 0;
 
 let epochsPerPixel;
 
+// For full validation set testing
+let fullTestExampleCounter = 0;
+const fullTestBatchSize = 10;
+let fullTestCorrectCounter = 0;
+
 
 function Init()
 {
@@ -206,8 +211,11 @@ function buttonClick( n )
 		{
 			if ( !running || paused )
 			{
-				testing = true;
-				evaluateTestData();
+				evaluateEntireTestSet();
+			}
+			else
+			{
+				alert("Cannot run test suite while training.");
 			}
 			break;
 		}
@@ -454,60 +462,76 @@ function getTestDataAccuracy()
 	return ( correct / testAccuracySampleSize );
 }
 
-function evaluateTestData()
+function evaluateEntireTestSet()
 {
-	if ( cnn == undefined )
+	if ( cnn == undefined || testing )
 		return;
 
+	testing = true;
+	fullTestExampleCounter = 0;
+	fullTestCorrectCounter = 0;
+
+	evaluateNextTestDataBatch();
+}
+
+function evaluateNextTestDataBatch()
+{
 	const randomTrialsPerImage = 4;
-	const batchSize = 10;
-	var correct = 0;
 	var imageDataArray = [];
 	var labels = [];
 
-	for ( var i = 0; i < 10000; i += batchSize )
+	for ( var example = 0; example < fullTestBatchSize; ++example )
 	{
-		for ( var example = 0; example < batchSize; ++example )
+		var i = fullTestExampleCounter + example;
+		var digitLabel = digit_labels[ i + 60000 ];
+		for ( var randomAugment = 0; randomAugment < randomTrialsPerImage; ++randomAugment )
 		{
-			var digitLabel = digit_labels[ i + 60000 ];
-			for ( var randomAugment = 0; randomAugment < randomTrialsPerImage; ++randomAugment )
-			{
-				imageDataArray[ example * randomTrialsPerImage + randomAugment ] = getTestingDigitImage( i );
-				labels[ example * randomTrialsPerImage + randomAugment ] = digitLabel;
-			}
-		}
-
-		const results = cnn.classifyImages( imageDataArray );
-
-		for ( example = 0; example < batchSize; ++example )
-		{
-			var guess = 0;
-			var max = 0;
-
-			for ( var classNum = 0; classNum < results[ example ].dimensions.depth; ++classNum )
-			{
-				var classSum = 0;
-				for ( var randomAugment = 0; randomAugment < randomTrialsPerImage; ++randomAugment )
-				{
-					classSum += results[ example * randomTrialsPerImage + randomAugment ].getValue( 0, 0, classNum );
-				}
-
-				if (  classSum > max )
-				{
-					max = classSum;
-					guess = classNum;
-				}
-			}
-
-			if ( guess == labels[ example * randomTrialsPerImage ] )
-			{
-				correct++;
-			}
+			imageDataArray[ example * randomTrialsPerImage + randomAugment ] = getTestingDigitImage( i );
+			labels[ example * randomTrialsPerImage + randomAugment ] = digitLabel;
 		}
 	}
 
-	console.log( Math.round( correct / 10.0 ) / 10.0 + "%" );
-	testing = false;
+	const results = cnn.classifyImages( imageDataArray );
+
+	for ( example = 0; example < fullTestBatchSize; ++example )
+	{
+		var guess = 0;
+		var max = 0;
+
+		for ( var classNum = 0; classNum < results[ example ].dimensions.depth; ++classNum )
+		{
+			var classSum = 0;
+			for ( var randomAugment = 0; randomAugment < randomTrialsPerImage; ++randomAugment )
+			{
+				classSum += results[ example * randomTrialsPerImage + randomAugment ].getValue( 0, 0, classNum );
+			}
+
+			if ( classSum > max )
+			{
+				max = classSum;
+				guess = classNum;
+			}
+		}
+
+		if ( guess == labels[ example * randomTrialsPerImage ] )
+		{
+			fullTestCorrectCounter++;
+		}
+	}
+
+	fullTestExampleCounter += fullTestBatchSize;
+
+	const resultField = document.getElementById("testResults");
+	resultField.innerHTML = String(fullTestCorrectCounter) + "/" + String(fullTestExampleCounter) + " examples correct, "+String( Math.round( 1000.0 * fullTestCorrectCounter / fullTestExampleCounter ) / 10.0 ) + "%";
+
+	if ( fullTestExampleCounter < 10000 )
+	{
+		setTimeout(evaluateNextTestDataBatch, 1);
+	}
+	else
+	{
+		testing = false;
+	}
 }
 
 function getTrainingDigitImage( n )

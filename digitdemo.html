@@ -12,7 +12,7 @@
 </head>
 <body>
 
-<a href="https://github.com/diaphone/webcnn"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
+<a target="_blank" href="https://github.com/diaphone/webcnn"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
 
 <div id="headerDiv"><a href="http://denseinl2.com">DenseInL2.com</a></div>
 
@@ -20,11 +20,11 @@
 <h1>Handwritten Digit Recognition by Convolutional Neural Network</h1>
 <p>
     This is a demonstration of my <a target="_blank" href="https://github.com/diaphone/webcnn">JavaScript-based Convolutional Neural Network</a>.
-    This network instance has been trained on the MNIST set of 60,000 handwritten digit images, and scores
-    approximately 98% accuracy on the associated set of 10,000 validation images. Draw a digit from 0 to 9
+    Draw a digit from 0 to 9
     in the left box, and the network will attempt to recognize it. The system evaluates your drawing after
     each stroke (mouse button up), so expect incorrect intermediate results if you draw your digit using
     more than one stroke.
+</p>
 </p>
 
 <div id="recognizer">
@@ -38,13 +38,26 @@
     </div>
 
 </div>
-    <div style="text-align: center; font-size: 12px; padding: 8px 0px 0px 0px;">Note: This demo uses ES6 features and will not run in Safari 9.x. Chrome 52+, Firefox 50+ recommended.</div>
-
+    <div style="text-align: center; font-size: 12px; padding: 8px 0px 0px 0px;">Note: This demo uses ES6 features and will not run in Safari 9.x. Try Chrome 52+, Firefox 50+.</div>
+    <h2>But this has been done before...</h2>
+    <p>
+        Yes, well, sort of. It's a classic dataset now, and there are a couple of other JavaScript demos similar to this one on the web already,
+        but what makes this one different is that I've coded the full training of the network, not merely the forward evaluation.
+        Other online demos I've found that let you draw digits for recognition
+        have only the forward implementation in JavaScript, and their network was trained externally in a commercial
+        product like MATLAB or TensorFlow. <a target="_blank" href="http://cs.stanford.edu/people/karpathy/convnetjs/demo/mnist.html">Andrej Karpathy's ConvNetJS</a> is the only other complete JavaScript CNN implementation
+        that I'm aware of. Because my motivation for doing this project is to learn about how these things
+        work--at the most fundamental level--and because deriving and implementing
+        the gradient descent training of the network is where the real math is, I decided not to cut any corners and to
+        intentionally re-invent the wheel for my own understanding. You can see
+        my somewhat crude training page here: <a target="_blank" href="digittraining.html">digittraining.html</a>
+        This network instance has been trained on the MNIST set of 60,000 handwritten digit images, and scores
+        approximately 98% accuracy on the associated set of 10,000 validation images.
+    </p>
 <h2>So, what is this doing?</h2>
 <p>
     The images you draw in the box above are being fed into a <a target="_blank" href="https://en.wikipedia.org/wiki/Convolutional_neural_network">Convolutional Neural Network</a> that I wrote
     in JavaScript/ES6 and trained on the <a target="_blank" href="http://yann.lecun.com/exdb/mnist/">MNIST dataset of handwritten digits</a>.
-    You can see my somewhat crude training page here: <a target="_blank" href="digittraining.html">digittraining.html</a>
     The network consists of digital filters that start out initialized with random values in their
     kernels. The network &quot;learns&quot; to distinguish the features of digits by a negative feedback process known as
     <a target="_blank" href="https://en.wikipedia.org/wiki/Gradient_descent">gradient descent</a>. Labeled example
