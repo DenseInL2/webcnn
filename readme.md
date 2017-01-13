@@ -1,7 +1,7 @@
 
 # WebCNN
 
-WebCNN is a browser based Convolutional Neural Network framework. This is a personal project in the earliest
+WebCNN is a browser-based Convolutional Neural Network framework. This is a personal project in the earliest
 stages of development, which I'm sharing publicly for those with academic interest. Here is what is currently implemented and tested:
 
 - Input image layer of arbitary dimensions, which accepts RGB ImageData for input. Full RGB is supported, as well as using the red channel for greyscale images
