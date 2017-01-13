@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Training a Convolutional Neural Network on MNIST Digits</title>
+    <script type="text/javascript" src="mathutils.js"></script>
+    <script type="text/javascript" src="mnist_digit_labels.js"></script>
+    <script type="text/javascript" src="webcnn.js"></script>
+    <script type="text/javascript" src="digittraining.js"></script>
+    <link href="digitdemo.css" rel="stylesheet" />
+</head>
+<body>
+
+<div id="headerDiv"><a href="http://denseinl2.com">DenseInL2.com</a></div>
+
+<div id="contentDiv">
+    <h1>JavaScript Convolutional Neural Network Training on the MNIST Dataset</h1>
+    Red: Mini-batch error<br>
+    Blue: Test data accuracy<br>
+
+    <div>
+        <canvas id="weightsCanvas" width="750" height="256"></canvas>
+    </div>
+
+    <div id="controlsDiv">
+
+        <div class="buttonContainer">
+            <button class="silverButton" onclick="buttonClick(1)" id="startButton">Start Training</button>
+        </div>
+
+        <div class="buttonContainer">
+            <button class="silverButton" onclick="buttonClick(3)" id="drawFilters">Draw Filters</button> Outputs bitmap images of the network's filters at the bottom of the page
+        </div>
+
+        <div class="buttonContainer">
+            <button class="silverButton" onclick="buttonClick(4)" id="testButton">Run Full Test Set</button> Evaluates all 10,000 test digits. Note: May take more than 10 seconds, requiring disabling JavaScript timeouts to avoid Unresponsive Script warnings.
+        </div>
+
+        <div class="buttonContainer">
+            <button class="silverButton" onclick="buttonClick(0)" id="createNewCNN">Create New Default CNN</button> Instantiates an uninitialized CNN with default settings, replacing whatever is currently loaded.
+        </div>
+
+        <div class="buttonContainer">
+            <button class="silverButton" onclick="buttonClick(7)" id="saveWeights">Download Network</button> Downloads the current network, including all hyperparameter settings and trained weights, to a JSON file.
+        </div>
+
+        <div class="buttonContainer">
+            <button class="silverButton" onclick="buttonClick(8)" id="fileInputButton">Load Network from JSON</button> Load a saved network or network config file from JSON
+        </div>
+
+        <input class="fileInput" type="file" id="networkFile" name="networkFile"/>
+
+
+        Examples Seen: <span id="examplesSeen"></span><br>
+        Forward Time: <span id="forwardTime"></span><br>
+        Backprop Time: <span id="backwardTime"></span><br>
+        Minibatch Loss: <span id="minibatchLoss"></span><br>
+        Training Accuracy: <span id="trainingAccuracy"></span> (for 100 random test digits)<br>
+    </div>
+
+</body>
+</html>
