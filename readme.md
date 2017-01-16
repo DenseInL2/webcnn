@@ -2,7 +2,11 @@
 # WebCNN
 
 WebCNN is a browser-based Convolutional Neural Network framework. This is a personal project in the earliest
-stages of development, which I'm sharing publicly for those with academic interest. Here is what is currently implemented and tested:
+stages of development, which I'm sharing publicly for those with academic interest.
+
+I have a live demo for the MNIST classification here: http://www.denseinl2.com/webcnn/digitdemo.html
+
+Here is what is currently implemented and tested:
 
 - Input image layer of arbitary dimensions, which accepts RGB ImageData for input. Full RGB is supported, as well as using the red channel for greyscale images
 - Convolutional Layers with square kernels of odd dimension ( 3x3, 5x5, etc. ), stride of 1, no zero padding, and ReLU activation
