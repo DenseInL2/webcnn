@@ -47,6 +47,7 @@ function Init()
 	let canvas = document.getElementById("weightsCanvas");
 	ctx_error = canvas.getContext("2d");
 	ctx_error.strokeStyle = "red";
+	resetGraphForContinuedTraining();
 	epochsPerPixel = Math.ceil( 60000 / ( miniBatchSize * ctx_error.canvas.width ) );
 
 	// Load training data
@@ -143,6 +144,8 @@ function OnTrainingSetImageLoaded( e )
 		trainingSetImagesLoaded = true;
 		console.log("Training Images Loaded");
 	}
+
+	checkAllImagesLoaded();
 }
 
 function OnTestSetImageLoaded( e )
@@ -154,6 +157,17 @@ function OnTestSetImageLoaded( e )
 	testSetCTX.drawImage( testSetImage, 0, 0);
 	testSetImageLoaded = true;
 	console.log("Test Images Loaded");
+
+	checkAllImagesLoaded();
+}
+
+function checkAllImagesLoaded()
+{
+	if ( testSetImageLoaded && trainingSetImagesLoaded )
+	{
+		const btn = document.getElementById("startButton");
+		btn.innerHTML = "Start Training";
+	}
 }
 
 function buttonClick( n )
@@ -165,7 +179,7 @@ function buttonClick( n )
 		{
 			//console.log("paused="+paused+" running="+running+" testing="+testing );
 
-			if (trainingSetImagesLoaded && !running && !testing && cnn != undefined )
+			if (trainingSetImagesLoaded && testSetImageLoaded && !running && !testing && cnn != undefined )
 			{
 				running = true;
 				paused = false;

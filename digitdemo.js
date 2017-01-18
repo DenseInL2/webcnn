@@ -7,7 +7,9 @@ let drawing = false;
 let lastPos;
 let lineWidth = 28;
 let drawingPathIndex = -1;
+let drawingDotsIndex = 0;
 let drawingPaths = [];
+let drawingDots = [];
 const TAU = Math.PI * 2;
 let freshCanvas = true;
 
@@ -42,6 +44,8 @@ function resetDrawingCanvas()
 	if ( ctx_draw == undefined )
 		return;
 
+	drawingDotsIndex = 0;
+	drawingDots = [];
 	freshCanvas = true;
 	ctx_draw.fillStyle = "white";
 	ctx_draw.fillRect( 0, 0, drawCanvas.width, drawCanvas.height );
@@ -73,6 +77,8 @@ function onMouseDown(e)
 	drawingPathIndex++;
 	drawingPaths[ drawingPathIndex ] = [];
 	lastPos = [ e.offsetX, e.offsetY ];
+	drawingDots[ drawingDotsIndex ] = lastPos;
+	drawingDotsIndex++;
 	ctx_draw.strokeStyle = "black";
 	ctx_draw.fillStyle = "black";
 	ctx_draw.lineCap = "round";
@@ -80,7 +86,6 @@ function onMouseDown(e)
 	ctx_draw.beginPath();
 	ctx_draw.arc( e.offsetX, e.offsetY, lineWidth / 2, 0, TAU );
 	ctx_draw.fill();
-
 }
 
 function onMouseUp(e)
@@ -215,6 +220,7 @@ function preProcessDrawing()
 		const scaleY = cropHeight / h;
 		const scale = Math.max( scaleX, scaleY );
 		const scaledLineWidth = Math.max( 1, Math.floor( lineWidth * scale ) );
+		const scaledDotWidth = Math.max( 1, Math.floor( scaledLineWidth / 2 ) );
 		//console.log(scale);
 
 		// Scaling down, redraw image with scale lineWidth
@@ -251,6 +257,14 @@ function preProcessDrawing()
 				ctx_temp.lineTo( p[0], p[1] );
 			}
 			ctx_temp.stroke();
+		}
+
+		for ( var dotIndex = 0; dotIndex < drawingDots.length; ++dotIndex )
+		{
+			var dotPos = drawingDots[ dotIndex ];
+			ctx_temp.beginPath();
+			ctx_temp.arc( dotPos[ 0 ], dotPos[ 1 ], scaledDotWidth, 0, TAU );
+			ctx_temp.fill();
 		}
 
 		drawnImageData = ctx_temp.getImageData( xmin, ymin, cropWidth, cropHeight );

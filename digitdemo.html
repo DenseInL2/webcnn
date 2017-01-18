@@ -23,7 +23,11 @@
     Draw a digit from 0 to 9
     in the left box, and the network will attempt to recognize it. The system evaluates your drawing after
     each stroke (mouse button up), so expect incorrect intermediate results if you draw your digit using
-    more than one stroke.
+    more than one stroke. Because the pre-processing of your input records and scales strokes, rather than
+    downsampling the canvas bitmap directly, building up a drawing from
+    short dashes or dots may not give accurate classification.
+    <p>
+    The associated training page for this network is here: <a target="_blank" href="digittraining.html">digittraining.html</a>
 </p>
 </p>
 
@@ -71,7 +75,8 @@
 
     The network analyzing the digits consists of:
     <ul>
-    <li>The input image pre-processor, which crops and downsamples your drawing to a 24x24 pixel input image</li>
+    <li>The input image pre-processor, which crops your drawing down to a 24x24 pixel input image, redrawing it
+    with a thinner stroke if it does not fill the box</li>
     <li>A convolution layer with (10) 5x5x1 filter kernels, ReLU activation</li>
     <li>A modified<sup>1</sup> max pooling layer, 2x2 with strides of 2</li>
     <li>A convolution layer with (20) 5x5x10 filter kernels, ReLU activation</li>
